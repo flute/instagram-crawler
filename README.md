@@ -1,5 +1,20 @@
 ### instagram 内容抓取
 
+### 运行
+
+修改 `app.js`:
+
+* `users` 为要抓取的用户列表
+* `tags` 为要抓取的tag数组
+* `purePage` 为每页返回的数据条数，最大为50
+* `userCookie` `tagCookie` 在登陆ins后，分别访问用户主页及tag页面获取，然后保存到app.js中。
+
+执行`node app.js`运行代码或使用pm2守护进程：`pm2 start app.js --name 'Instagram'`。
+
+下载完的视频、图片及JSON文件存储在`downloads`对应目录下，完整日志在`logs`目录。
+
+### 程序说明
+
 1、需要登录信息，即抓取时需要附带`cookie`，同时需要`user-agent`。
 
 2、数据获取接口及下载均有频率限制，无间隔的请求（几百个资源）会被限制，在被限制后睡眠一定时间继续。
