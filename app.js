@@ -13,11 +13,11 @@ const util = require('util')
 const log = require('./utils/log').getLogger('debug')
 
 // 要抓取的用户/tag
-//let users = ['iqb_c']
-let users = ['funny_videos']
+let users = ['iqb_c', 'funny_videos']
 users = []
 //let tags = ['movies', 'funnyvideos']
-let tags = ['animals', 'pets', 'mashup', 'movies', 'gaming', 'cartoons', 'art', 'music', 'sports', 'sciences', 'celebrity', 'nature', 'travel', 'fashion', 'dance', 'car', 'nsfw']
+// let tags = ['animals', 'pets', 'mashup', 'movies', 'gaming', 'cartoons', 'art', 'music', 'sports', 'sciences', 'celebrity', 'nature', 'travel', 'fashion', 'dance', 'car', 'nsfw']
+let tags = ['arbicdance']
 
 let target = [].concat(
     users.map(item => {
@@ -35,17 +35,17 @@ let target = [].concat(
 )
 
 let baseUrl = 'https://www.instagram.com/'
-let purePage = 50
+let purePage = 50 // 每次最多返回50条数据
 let headers = {
     cookie: '',
-    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36'
+    'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.70 Safari/537.36'
 }
 
-let fetchUserUrl = `https://www.instagram.com/graphql/query/?query_hash=a5164aed103f24b03e7b7747a2d94e3c&variables=%7B%22id%22%3A%22%s%22%2C%22first%22%3A${purePage}%2C%22after%22%3A%22%s%22%7D`
-let userCookie = 'mcd=3; mid=W6NuSQAEAAHYAFNQ9FUXTRmuZuuB; fbm_124024574287414=base_domain=.instagram.com; shbid=9246; ds_user_id=8095487694; rur=FRC; csrftoken=mkgdhCw6PhOztTz6Leaup373Ydss6XOA; csrftoken=mkgdhCw6PhOztTz6Leaup373Ydss6XOA; sessionid=IGSC0dfc3fc18db6b624c9e27e5a613e0f7635f1e6376a67c08a81ea99e68c9b2d96%3AUjdOLdRnPbMj8ANsHoqmeCLqOdnqcGA7%3A%7B%22_auth_user_id%22%3A8095487694%2C%22_auth_user_backend%22%3A%22accounts.backends.CaseInsensitiveModelBackend%22%2C%22_auth_user_hash%22%3A%22%22%2C%22_platform%22%3A4%2C%22_token_ver%22%3A2%2C%22_token%22%3A%228095487694%3AebQ6sj7NqV3MYDW1P9bzczfJU3kwCPBT%3Ac9d2332a2ffda5cd5db2461266b39d2feefa81bef75beddbe3a5e1044200825c%22%2C%22last_refreshed%22%3A1537845056.8236260414%7D; fbsr_124024574287414=vpzzT5hm-bZFdB59YHxAIAuV9WhJntgUOlVwoZPJhKA.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImNvZGUiOiJBUUN1SDFRUWYwVFV5RXQ1TXg2ZjhZVnNKTDlHMC1fMWtsUzN1RnpKa3A5dkZnSmdhSzFyb3BkaDVyUWNSV0R4bWhsVEdrNEMtODhGN3ZlUUgtYXdRZjhFemt6dFFFcHR5LVhBX3o3UTR2N2w5NDZhTDROaXphU3d6NEQwNm1sa1BienlzdzVwc3BkWUZTVzNSNjFTX1NXbE41dG5IYUdZQWNkY0E0aWZCQ3VUcDhYWXpSaVAza3pDU0JHd2xGLVJoNEpSX3pjdXdfVktHWkotSWVoc3AxZTBsYTBzMV9fVHdIdlZNT1JIb29KLV9lS1RWYnItd0N4TkVJR1d2d296UF91bnNqSGoxb1ZhZWx5YXlwcVZPR1dxdS1VTWxKN2xIelp3cElHRGZkdi1DNDF6VWdGS2xOejhORU5YSmNNcFRSQ2VWVldEMEFGakg3cXZpRWE4XzAxcCIsImlzc3VlZF9hdCI6MTUzNzg1NDExMCwidXNlcl9pZCI6IjEwMDAwNzQ1OTEyMDkzOSJ9; shbts=1537854120.7347617; urlgen="{\"67.209.176.135\": 25820\054 \"47.88.192.181\": 45102}:1g4g6x:dwBGk-uOufguwN8P5LT163d6dcE"'
+fetchUserUrl = (id, offset) => encodeURI(`https://www.instagram.com/graphql/query/?query_hash=2c5d4d8b70cad329c4a6ebe3abb6eedd&variables={"id":"${id}","first":${purePage},"after":"${offset}"}`) 
+let userCookie = 'mcd=3; mid=XDRFuAAEAAFTzWmhvjlWuFH7w-oa; csrftoken=G240QxAtheabum0dWDGBxSNmAX8q5b1I; sessionid=14274675657%3Aj0j4H1djZqvlHI%3A18; ds_user_id=14274675657; rur=VLL; urlgen="{\"119.28.85.131\": 132203\054 \"104.199.164.217\": 15169\054 \"35.213.124.13\": 19527}:1iQROm:nBFWuWJvZRioW9pT9H2ELy23y9k"'
 
-let fetchTagUrl = `https://www.instagram.com/graphql/query/?query_hash=1780c1b186e2c37de9f7da95ce41bb67&variables=%7B%22tag_name%22%3A%22%s%22%2C%22first%22%3A${purePage}%2C%22after%22%3A%22%s%22%7D`
-let tagCookie = 'mcd=3; mid=W6NuSQAEAAHYAFNQ9FUXTRmuZuuB; fbm_124024574287414=base_domain=.instagram.com; shbid=9246; ds_user_id=8095487694; rur=FRC; csrftoken=mkgdhCw6PhOztTz6Leaup373Ydss6XOA; csrftoken=mkgdhCw6PhOztTz6Leaup373Ydss6XOA; sessionid=IGSC0dfc3fc18db6b624c9e27e5a613e0f7635f1e6376a67c08a81ea99e68c9b2d96%3AUjdOLdRnPbMj8ANsHoqmeCLqOdnqcGA7%3A%7B%22_auth_user_id%22%3A8095487694%2C%22_auth_user_backend%22%3A%22accounts.backends.CaseInsensitiveModelBackend%22%2C%22_auth_user_hash%22%3A%22%22%2C%22_platform%22%3A4%2C%22_token_ver%22%3A2%2C%22_token%22%3A%228095487694%3AebQ6sj7NqV3MYDW1P9bzczfJU3kwCPBT%3Ac9d2332a2ffda5cd5db2461266b39d2feefa81bef75beddbe3a5e1044200825c%22%2C%22last_refreshed%22%3A1537845056.8236260414%7D; fbsr_124024574287414=r2l1Yl3SMGsppA_MA6GNcTmI7dOW4-Crg8AIeLTOLpM.eyJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImNvZGUiOiJBUUNYcW02cWNWMTA1X3JHdGljejVKcTQza2FrdTFSWC1Wclc4MnM2amJnWVVZV2h0V3M1RHVLLWxWb20zOWRWTUE4ZElDTWNadlpwa3dodWYxQWg5ZjJTME95dnRNVVBVczYycGZFMGdwZmRETHc2RTlmNnNfUlZuYlVrY3ZiRmxCV1pQTEtNTllZajdsM0M5NlBvU3dFZGwtVDRidmUtSE5pNi02NGdPSDNLT3IyMWVsbmwzUjhaU0ZCVkNqV2pkemNVQmVLajVSLXltLW1TYUdCQUkzRVU4ZU54U3lnWk9JWGtYempTWWhKdmRZT1dyQXBHU2xobU92SFZ2dHFLcUpvSlh6cmRpZVJPa1BiTzlRZW5GRGZLVGRSNFJCYzV1NjdKT29rN1FpdktIY2V4X2VwdjlBZkxVQ04xTzFDSEU0V1dzNXU2MFI5aUt2N3lObElIZnpnaiIsImlzc3VlZF9hdCI6MTUzNzg1NDM3NiwidXNlcl9pZCI6IjEwMDAwNzQ1OTEyMDkzOSJ9; shbts=1537854545.179847; urlgen="{\"67.209.176.135\": 25820\054 \"47.88.192.181\": 45102}:1g4gDZ:kUbzV9ucIEiUCkmh-MkaAhcfQyg"'
+let fetchTagUrl = (tagName, offset) => encodeURI(`https://www.instagram.com/graphql/query/?query_hash=174a5243287c5f3a7de741089750ab3b&variables={"tag_name":"${tagName}","first":${purePage},"after":"${offset}"}`)
+let tagCookie = 'mcd=3; mid=XDRFuAAEAAFTzWmhvjlWuFH7w-oa; csrftoken=G240QxAtheabum0dWDGBxSNmAX8q5b1I; sessionid=14274675657%3Aj0j4H1djZqvlHI%3A18; ds_user_id=14274675657; rur=VLL; urlgen="{\"119.28.85.131\": 132203\054 \"104.199.164.217\": 15169\054 \"35.213.124.13\": 19527}:1iQNQC:CbHNVkT7TjcOQ_DNb8CM-Lvh4_w"'
 
 let getVideoUrl = 'https://www.instagram.com/p/%s/?__a=1'
 
@@ -138,18 +138,22 @@ const getHtml = item => {
             totalPage = Math.ceil(count / purePage)
 
             // 存储首页信息
+            // 优化: 等待所有视频下载地址获取完毕再进行下一步，避免丢失一部分未完成数据
+            let actions = []
             edges.forEach(item => {
                 item.mode = type
-                storeMedia(item)
+                actions.push(storeMedia(item))
             })
 
-            // 返回分页信息
-            return resolve({
+            Promise.all(actions)
+            .then(() => {
+              // 返回分页信息
+              return resolve({
                 totalPage: totalPage,
                 userId: userId,
                 cursor: cursor
+              })
             })
-
         });
     })
 
@@ -188,12 +192,15 @@ const fetchData = (item, uid, offset, next) => {
     let url
 
     if (item.type == 'user') {
-        url = util.format(fetchUserUrl, uid, offset)
+        // url = util.format(fetchUserUrl, uid, offset)
+        url = fetchUserUrl(uid, offset)
         headers.cookie = userCookie
     } else {
-        url = util.format(fetchTagUrl, uid, offset)
+        // url = util.format(fetchTagUrl, uid, offset)
+        url = fetchTagUrl(uid, offset)
         headers.cookie = tagCookie
     }
+    // console.log(url)
 
     let options = {
         method: 'GET',
@@ -240,9 +247,11 @@ const fetchData = (item, uid, offset, next) => {
         }
 
         let edges = listData.edges
+        let actions = []
         edges.forEach(item => {
             item.mode = type
-            storeMedia(item)
+            // storeMedia(item)
+            actions.push(storeMedia(item))
         })
         let {
             has_next_page,
@@ -250,16 +259,17 @@ const fetchData = (item, uid, offset, next) => {
         } = listData.page_info
 
         log.info(`page:${++fetchPageCount} ${userName} 数据获取成功，帖子 ${edges.length} 个, has_next_page: ${has_next_page} ，end_cursor: ${end_cursor}`)
-
-        if (!has_next_page) {
+        
+        Promise.all(actions)
+        .then(() => {
+          if (!has_next_page) {
             return next('所有数据获取完毕，无下页')
-        }
-        setTimeout(function () {
-            return next(null, item, uid, end_cursor)
-        }, 2000)
-
+          }
+          setTimeout(function () {
+              return next(null, item, uid, end_cursor)
+          }, 2000)
+        })
     });
-
 }
 
 /**
